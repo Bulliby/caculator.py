@@ -129,11 +129,27 @@ class Interpreter():
         self.root = root
         self.total = 0
 
+
     def visitNode(self, node):
         if type(node) is not Int:
-            self.visitNode(node.left)
-            self.visitNode(node.right)
-            print(node)
+            left = self.visitNode(node.left)
+            right = self.visitNode(node.right)
+            if left and right:
+                result = self.calc(left, right, node)
+                return result
+
+        else:
+            return node.value
+
+    def calc(self, left, right, node):
+        if node.operator == 'PLUS':
+            return left + right
+        if node.operator == 'MINUS':
+            return left - right
+        if node.operator == 'DIV':
+            return left / right
+        if node.operator == 'MUL':
+            return left * right
 
 input = input()
 lexer = Lexer(input)
@@ -142,4 +158,5 @@ parser = Parser(tokens)
 nodes = parser.parse()
 
 interpreter = Interpreter(nodes)
-interpreter.visitNode(nodes)
+integer = interpreter.visitNode(nodes)
+print(integer)
